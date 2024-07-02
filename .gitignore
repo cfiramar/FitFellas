@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+sprites/
+todo_list.txt

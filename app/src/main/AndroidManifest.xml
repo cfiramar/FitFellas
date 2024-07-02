@@ -24,10 +24,14 @@
             android:theme="@style/Theme.FitFellas">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".CombatActivity" android:exported="true" />
+        <activity android:name=".ViewFellasActivity" android:exported="true" />
+        <activity android:name=".PersonalStatsActivity" android:exported="true" />
+
     </application>
 
 </manifest>

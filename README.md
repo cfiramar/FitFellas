@@ -1,5 +1,5 @@
-FitFellas
-An android game that encourages fitness
+# FitFellas
+## An android game that encourages fitness
 
 In this game the user gets to unlock various fun, cool, cute sometimes frightning creatures called "Fellas".
 As the user trains by running, walking, weight-lifting etc, he trains his Fellas as well,

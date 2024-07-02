@@ -1,6 +1,7 @@
 package com.cfir.fitfellas
 
 import com.cfir.fitfellas.ui.theme.FitFellasTheme
+
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast

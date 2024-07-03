@@ -20,8 +20,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 
-class LoginActivity : ComponentActivity() {
+class SignInActivity : ComponentActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var viewModel: AppViewModel
 
     private val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
@@ -65,15 +66,16 @@ class LoginActivity : ComponentActivity() {
 
     private fun updateUI(account: GoogleSignInAccount?) {
         if (account != null) {
+            viewModel.saveUser(account.id!!, account.email!!)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
-            // Show sign-in failed message
+            Log.e(TAG, "Sign-in failed")
         }
     }
 
     companion object {
-        private const val TAG = "LoginActivity"
+        private const val TAG = "SignInActivity"
     }
 }
 

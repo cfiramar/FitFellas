@@ -1,6 +1,12 @@
 package com.cfir.fitfellas
 
+import android.content.Context
+import com.cfir.fitfellas.database.AppDatabase
+import com.cfir.fitfellas.ui.theme.FitFellasTheme
+
 import android.os.Bundle
+import android.graphics.Paint
+import android.graphics.Typeface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
@@ -15,27 +21,33 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.geometry.Size
-import android.graphics.Paint
-import android.graphics.Typeface
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.launch
-import com.cfir.fitfellas.ui.theme.FitFellasTheme
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class ViewFellasActivity : ComponentActivity() {
+    private lateinit var viewModel: AppViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val database = AppDatabase.getInstance(applicationContext)
+        viewModel = ViewModelProvider(this, AppViewModelFactory(database))
+            .get(AppViewModel::class.java)
+
         setContent {
             FitFellasTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ViewFellasScreen(onBackClick = { finish() })
+                    ViewFellasScreen(
+                        viewModel = viewModel,
+                        onBackClick = { finish() },
+                        context = this
+                    )
                 }
             }
         }
@@ -43,19 +55,21 @@ class ViewFellasActivity : ComponentActivity() {
 }
 
 @Composable
-fun ViewFellasScreen(onBackClick: () -> Unit) {
+fun ViewFellasScreen(viewModel: AppViewModel, onBackClick: () -> Unit, context: Context) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.toFloat()
     val screenHeight = LocalConfiguration.current.screenHeightDp.toFloat()
-    val density = LocalDensity.current.density
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
-    val fellas = remember {
-        listOf(
-            Fitling(screenWidth / 4, screenWidth / 2),
-            Fitmore(3 * screenWidth / 4, screenWidth / 2)
-        )
+    val account = GoogleSignIn.getLastSignedInAccount(context)
+    val userId = remember { account?.id }
+    var fellas by remember { mutableStateOf<List<Fella>>(emptyList()) }
+
+
+    LaunchedEffect(userId) {
+        userId?.let {
+            fellas = viewModel.loadFellas(it)
+        }
     }
-
 
     LaunchedEffect(Unit) {
         fellas.forEach { fella ->

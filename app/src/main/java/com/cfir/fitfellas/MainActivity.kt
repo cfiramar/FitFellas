@@ -14,10 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account == null) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+            return
+        }
         setContent {
             FitFellasTheme {
                 Surface(

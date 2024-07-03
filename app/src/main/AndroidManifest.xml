@@ -28,9 +28,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CombatActivity" android:exported="true" />
-        <activity android:name=".ViewFellasActivity" android:exported="true" />
-        <activity android:name=".PersonalStatsActivity" android:exported="true" />
+        <activity
+            android:name=".CombatActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ViewFellasActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PersonalStatsActivity"
+            android:exported="true" />
 
     </application>
 

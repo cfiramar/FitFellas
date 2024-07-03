@@ -6,12 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import com.cfir.fitfellas.database.generateUUID
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 abstract class Fella(x_pos: Float, y_pos: Float) {
     open var level: Int = 1
     open var experience: Int = 0
+    abstract var nickname: String
+
+    open val id: String = generateUUID()
+    abstract val userId: String
 
     abstract val name: String
     abstract val drawableResourceId: Int
@@ -20,7 +25,6 @@ abstract class Fella(x_pos: Float, y_pos: Float) {
 
     var size = Size(0f, 0f)
     open val sizeFactor = 1f
-
     var position by mutableStateOf((Offset(x_pos, y_pos)))
     var isFacingLeft by mutableStateOf(true)
 
@@ -29,6 +33,10 @@ abstract class Fella(x_pos: Float, y_pos: Float) {
         val h = context.resources.getDrawable(drawableResourceId, null).intrinsicHeight.toFloat()
         val density = context.resources.displayMetrics.density
         size = Size(w * sizeFactor / density, h * sizeFactor / density)
+    }
+
+    fun giveNickname(nickname: String) {
+        this.nickname = nickname
     }
 
     private fun getNewPosition(screenWidth: Float, screenHeight: Float): Pair<Float, Float> {
@@ -64,17 +72,39 @@ abstract class Fella(x_pos: Float, y_pos: Float) {
     }
 }
 
-class Fitling(x_pos: Float, y_pos: Float) : Fella(x_pos, y_pos) {
+class Fitling(
+    override val id: String,
+    override val userId: String,
+    override var nickname: String,
+    level: Int,
+    experience: Int,
+) : Fella(0f, 0f) {
     override val name: String = "Fitling"
     override val drawableResourceId = R.drawable.fitling
+    override val sizeFactor = 0.8f
     override val evolutionLevel = 8
     override val evolution = Fitmore::class.java
-    override val sizeFactor = 0.8f
+
+    init {
+        this.level = level
+        this.experience = experience
+    }
 }
 
-class Fitmore(x_pos: Float, y_pos: Float) : Fella(x_pos, y_pos) {
+class Fitmore(
+    override val id: String,
+    override val userId: String,
+    override var nickname: String,
+    level: Int,
+    experience: Int,
+) : Fella(0f, 0f) {
     override val name: String = "Fitmore"
     override val drawableResourceId = R.drawable.fitmore
     override val evolutionLevel = -1
     override val evolution = null
+
+    init {
+        this.level = level
+        this.experience = experience
+    }
 }

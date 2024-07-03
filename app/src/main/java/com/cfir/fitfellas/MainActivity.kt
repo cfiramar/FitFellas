@@ -19,13 +19,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account == null) {
-            startActivity(Intent(this, SignInActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
         }
+
+        // If user is signed in, set the content of the activity
         setContent {
             FitFellasTheme {
                 Surface(
